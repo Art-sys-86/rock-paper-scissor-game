@@ -1,0 +1,45 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: rgb(247, 130, 5);
+    overflow-y: hidden;
+    overflow-x: hidden;
+    margin: 0;
+    width: 100%;
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+    font-family: inherit;
+    font-size: 100%; 
+    line-height: 1.15;
+    margin: 0;
+}
+
+.screenHold{
+    display: inline-block;
+    border: 2px solid rgb(0, 0, 0);
+    background-color: red;
+    padding: 22em 22em 22em 0em;
+    width: 100%;
+    margin: 0;
+}
+
+#scoreHold{
+    border: 2px solid rgb(225, 29, 29);
+    background-color: yellow;
+    width: 100%;
+    padding-left: 50%;
+    position: absolute;
+    top: 0;
+    
+}
+
+#scoreHold > p{
+    color: black;
+}
