@@ -18,9 +18,23 @@
                 </div>
             </div>
             <div id="powerUP">
-                <button id="power1"><img src="Assets/AI.svg">Talk</button>
-                <button id="power2"><img src="Assets/bullet.svg">Tie Bullet</button>
-                <button id="power3"><img src="Assets/yamchas.svg">Self-Destruction</button>
+                <button id="power1"><img src="Assets/AI.svg" class="powerImg">TALK<span class="tooltip">Talk to the computer, empathize! 80% higher chance to win this round.</span></button>
+                <button id="power2"><img src="Assets/bullet.svg" class="powerImg">TIE BULLET<span class="tooltip">Oh look, a "tie"! Steal a point from the computer when there is tie scores. Shhh.</span></button>
+                <button id="power3"><img src="Assets/yamchas.svg" class="powerImg">SELF-DESTRUCTION<span class="tooltip">If I can't win, you can't win also</span></button>
+            </div>
+            <div id="mainContent">
+                <button id="rock"><img class="game" src="Assets/rock.svg"></button>
+                <button id="scissor"><img class="game" src="Assets/scissor.svg"></button>
+                <button id="paper"><img class="game" src="Assets/paper.svg"></button>
+                <div id="boxContain">
+                    <div id="userBox"><video src="Assets/babyMeme.mp4" width="500" class="memeVideo"></video></div>
+                    <p id="versus">VS</p>
+                    <div id="enemyBox"></div>
+                    <p id="roundCounter">ROUND 1</p>
+                </div>
+                <button id="enemyRock" disabled><img class="gameEnemy" src="Assets/rock.svg"></button>
+                <button id="enemyScissor" disabled><img class="gameEnemy" src="Assets/scissor.svg"></button>
+                <button id="enemyPaper" disabled><img class="gameEnemy" src="Assets/paper.svg"></button>
             </div>
         </div>
     </main>
