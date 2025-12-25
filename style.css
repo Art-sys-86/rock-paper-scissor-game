@@ -4,6 +4,17 @@
     box-sizing: border-box;
 }
 
+
+
+html {
+    line-height: 1.15;
+    -webkit-text-size-adjust: 100%;
+}
+
+main {
+    display: block;
+}
+
 body {
     background-color: rgb(247, 130, 5);
     overflow-y: hidden;
@@ -144,8 +155,23 @@ img:hover{
     height: 143px;
 }
 
+.choice{
+    position: relative;
+    left: 130px;
+    top: 15px;
+    border-radius: 50%;
+    width: 180px;
+    height: 180px;
+}
+
 #rock:hover img, #scissor:hover img, #paper:hover img{
     transform: scale(1.03);
+}
+
+#rock:active img, #scissor:active img, #paper:active img{
+    
+    transform: scale(0.90);
+    box-shadow: 5px 5px 2px 1px rgb(6, 6, 6);
 }
 
 #boxContain{
@@ -155,6 +181,39 @@ img:hover{
     left: 15em;
     width: 57%;
     height: 85%;
+}
+
+.annouced{
+    width: fit-content;
+    font-size: 26px;
+    position: absolute;
+    transform: rotate(-25deg);
+    top: -25px;
+    left: -20px;
+    font-weight: bold;
+    display: none;
+}
+
+.annouced2{
+    width: fit-content;
+    font-size: 26px;
+    position: absolute;
+    transform: rotate(-25deg);
+    top: -25px;
+    left: -20px;
+    font-weight: bold;
+    display: none;
+}
+
+.annouced3{
+    width: fit-content;
+    font-size: 26px;
+    position: absolute;
+    transform: rotate(-25deg);
+    top: -25px;
+    left: -20px;
+    font-weight: bold;
+    display: none;
 }
 
 #userBox{

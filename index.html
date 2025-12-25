@@ -11,10 +11,10 @@
         <div class="screenHold">
             <button display: hidden id="start">Start Game!</button>
             <div id="scoreHold">
-                <p class="tieScore">Tie Score: </p>
+                <p class="tieScore">Tie Score: 0</p>
                 <div class="scoreUser">
-                <p class="userScore">Your Score: </p>
-                <p class="enemyScore">Computer Score: </p>
+                <p class="userScore">Your Score: 0</p>
+                <p class="enemyScore">Computer Score: 0</p>
                 </div>
             </div>
             <div id="powerUP">
@@ -27,8 +27,10 @@
                 <button id="scissor"><img class="game" src="Assets/scissor.svg"></button>
                 <button id="paper"><img class="game" src="Assets/paper.svg"></button>
                 <div id="boxContain">
-                    <div id="userBox"><video src="Assets/babyMeme.mp4" width="500" class="memeVideo"></video></div>
+                    <p class="annouced">WINNER!</p>
+                    <div id="userBox"><video src="Assets/Power1.webm" width="500" class="memeVideo"></video></div>
                     <p id="versus">VS</p>
+                    <p class="annouced">Loser :(</p>
                     <div id="enemyBox"></div>
                     <p id="roundCounter">ROUND 1</p>
                 </div>
@@ -39,4 +41,5 @@
         </div>
     </main>
 </body>
+<script src="main.js"></script>
 </html>
