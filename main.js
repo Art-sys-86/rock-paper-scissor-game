@@ -13,14 +13,14 @@ const bigVideo = document.getElementById('bigVideo');
 const memeVid = document.getElementById('meme');
 const computerText = document.getElementById('computerAnnounced');
 const resetButton = document.getElementById('reset');
-const choice = ["rock", "paper", "scissor"];
+const choice = ["scissor"];
 
 
 class game{
 constructor(userChoice, computerChoice){
     this.userChoice = userChoice;
     this.computerChoice = computerChoice;
-    this.userScore = 0;
+    this.userScore = 2;
     this.computerScore = 0;
     this.tieScore = 0;
     this.round = 0;
@@ -33,12 +33,15 @@ constructor(userChoice, computerChoice){
     memeVid.addEventListener('ended', ()=>{
         if(this.userScore >= 3 || this.computerScore >= 3){
             this.disable();
+            this.confettiShow();
             memeVid.classList.add('displayHidden');
             memeVid.classList.remove('memeVideo');
             imgHandler.classList.add('choice');
             imgHandler.classList.remove('displayHidden');
             resetButton.classList.add('reset');
+            resetButton.classList.remove('displayHidden');
             memeVid.muted = true;
+            
         }
         else{
         memeVid.classList.add('displayHidden');
@@ -73,7 +76,7 @@ restart(){
         rock.disabled = false;
         paper.disabled = false;
         scissor.disabled = false;
-    }, 3000);
+    }, 0);
 }
 
 result(){
@@ -82,6 +85,7 @@ result(){
     let computer = this.computerChoice;
     this.round++;
     document.getElementById('roundCounter').textContent = `Round ${this.round}`;
+
     if(user === computer){
         this.disable();
         setTimeout(() => {
@@ -97,6 +101,7 @@ result(){
             bigVideo.play();
         }, 1500)
     }
+
     else if(user === "rock" && computer === "scissor"){
         this.disable();
         setTimeout(() => {
@@ -106,12 +111,8 @@ result(){
             computerText.textContent = `LOSER!`;
         }, 500);
         this.memeVideo();
-        if(this.userScore >= 3){
-        this.disable();
-        this.confettiShow();
-        return;
-        }
     }
+
     else if(user === "scissor" && computer === "paper"){
         this.disable();
         setTimeout(() => {
@@ -121,12 +122,8 @@ result(){
             computerText.textContent = `LOSER!`;
         }, 500);
         this.memeVideo();
-        if(this.userScore >= 3){
-        this.disable();
-        this.confettiShow();
-        return;
-        }
     }
+
     else if(user === "paper" && computer === "rock"){
         this.disable();
         setTimeout(() => {
@@ -136,13 +133,8 @@ result(){
             computerText.textContent = `LOSER!`;
         }, 500);
         this.memeVideo();
-        if(this.userScore >= 3){
-        this.disable();
-        this.confettiShow();
-        return;
-        }
-        
     }
+
     else{
         this.computerScore++;
         computerPoint.textContent = `Computer Score: ${this.computerScore}`;
@@ -150,12 +142,7 @@ result(){
         computerText.textContent = `WINNER!`;
         this.disable();
         this.memeLoseVid();
-        if (this.computerScore >= 3) {
-        this.confettiShow();
-        this.disable();
     }
-    }
-    
 }
 
 display(){
@@ -172,6 +159,18 @@ display(){
 
 memeVideo(){
     this.disable();
+    if(this.userScore === 3 && this.userChoice === "rock" &&  this.computerChoice === "scissor"){
+        this.disable();
+        setTimeout(() => {
+            memeVid.classList.remove('displayHidden');
+            memeVid.classList.add('memeVideo');
+            imgHandler.classList.add('displayHidden');
+            memeVid.src = `Assets/easterEgg1.webm`;
+            memeVid.muted = false;
+            memeVid.play();
+    }, 1500);
+    }
+    else{
         setTimeout(() => {
             memeVid.classList.remove('displayHidden');
             memeVid.classList.add('memeVideo');
@@ -180,6 +179,8 @@ memeVideo(){
             memeVid.muted = false;
             memeVid.play();
     }, 1500);
+    }
+        
 }
 
 memeLoseVid(){
@@ -207,32 +208,32 @@ enable(){
 }
 
 confettiShow() {
-  const duration = 2 * 100;
-  const animationEnd = Date.now() + duration;
-  const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+const duration = 2 * 100;
+const animationEnd = Date.now() + duration;
+const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
-  function randomInRange(min, max) {
+function randomInRange(min, max) {
     return Math.random() * (max - min) + min;
-  }
+}
 
-  this.confettiInterval = setInterval(() => {
+this.confettiInterval = setInterval(() => {
     const timeLeft = animationEnd - Date.now();
 
     if (timeLeft <= 0) {
-      clearInterval(this.confettiInterval);
+    clearInterval(this.confettiInterval);
     }
 
-    const particleCount = 50 * (timeLeft / duration);
+const particleCount = 50 * (timeLeft / duration);
 
-    confetti(Object.assign({}, defaults, {
-      particleCount,
-      origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+confetti(Object.assign({}, defaults, {
+    particleCount,
+    origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
     }));
     confetti(Object.assign({}, defaults, {
-      particleCount,
-      origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+    particleCount,
+    origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
     }));
-  }, 50);
+}, 50);
 }
 
 
