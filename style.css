@@ -87,9 +87,7 @@ img {
     top: 1px;
 }
 
-img:hover{
-    background-color: aqua;
-}
+
 
 #power1, #power2, #power3{
     position: relative;
@@ -101,9 +99,10 @@ img:hover{
     border-radius: 20px;
     color: white;
     font-weight: bold;
+    cursor: pointer;
 }
 
-.tooltip {
+.tooltip{
     visibility: hidden;
     opacity: 0; 
     position: absolute;
@@ -127,6 +126,47 @@ img:hover{
 #power3:hover .tooltip {
     visibility: visible;
     opacity: 1;
+}
+
+.wrong1{
+    width: 75%;
+    height: 15%;
+    position: absolute;
+    left: 1.2em;
+    z-index: 5;
+    opacity: 90%;
+    cursor: not-allowed;
+}
+
+.wrong2{
+    width: 75%;
+    height: 15%;
+    position: absolute;
+    top: 12.5em;
+    left: 1.2em;
+    z-index: 5;
+    opacity: 90%;
+    cursor: not-allowed;
+}
+
+.wrong3{
+    width: 75%;
+    height: 15%;
+    position: absolute;
+    left: 1.2em;
+    top: 24.5em;
+    z-index: 5;
+    opacity: 90%;
+    cursor: not-allowed;
+}
+
+.bomb{
+    width: 96em;
+    height: 96em;
+    z-index: 90;
+    top: -31.5em;
+    left: -0.3em;
+    position: absolute;
 }
 
 #mainContent{
@@ -155,13 +195,65 @@ img:hover{
     height: 143px;
 }
 
+.reset {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    width: 150px;
+    height: 150px;
+    padding: 0;
+    margin: 0;
+    border: 2px solid white;
+    background-color: #333;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 100;
+    overflow: hidden;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.reset:hover {
+    background-color: #555;
+    transform: scale(1.1);
+}
+
+.resetImg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+    position: static; 
+}
+
+.reset:active {
+    transform: scale(0.92); 
+    box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
+    background-color: #222; 
+    transition: transform 0.1s ease;
+}
+
 .choice{
     position: relative;
     left: 130px;
     top: 15px;
     border-radius: 50%;
     width: 180px;
+    border: 2px solid black;
     height: 180px;
+}
+
+.computerChoice{
+    position: relative;
+    left: 130px;
+    top: 15px;
+    border-radius: 50%;
+    width: 180px;
+    border: 2px solid black;
+    height: 180px;
+}
+
+.displayHidden{
+    display: none;
 }
 
 #rock:hover img, #scissor:hover img, #paper:hover img{
@@ -181,39 +273,43 @@ img:hover{
     left: 15em;
     width: 57%;
     height: 85%;
+    overflow: hidden;
 }
 
 .annouced{
     width: fit-content;
     font-size: 26px;
     position: absolute;
+    color: white;
     transform: rotate(-25deg);
     top: -25px;
     left: -20px;
     font-weight: bold;
     display: none;
+    background-color: black;
+    border-radius: 5px;
 }
 
-.annouced2{
-    width: fit-content;
-    font-size: 26px;
+.bigVideo{
+    display: block;
+    width: 38em;
+    height: 38em;
+    left: 8em;
     position: absolute;
-    transform: rotate(-25deg);
-    top: -25px;
-    left: -20px;
-    font-weight: bold;
-    display: none;
+    z-index: 10;
+    object-fit: cover;
+    border-radius: 50px;
 }
 
-.annouced3{
-    width: fit-content;
-    font-size: 26px;
+.powerUpVideo{
+    display: block;
+    width: 38em;
+    height: 38em;
+    left: 8em;
     position: absolute;
-    transform: rotate(-25deg);
-    top: -25px;
-    left: -20px;
-    font-weight: bold;
-    display: none;
+    z-index: 11;
+    object-fit: cover;
+    border-radius: 50px;
 }
 
 #userBox{
@@ -242,6 +338,7 @@ img:hover{
     height: 35%;
     width: 50%;
     border-radius: 50px;
+    z-index: 0;
 }
 
 #enemyRock, #enemyPaper, #enemyScissor{
@@ -265,10 +362,16 @@ img:hover{
 }
 
 .memeVideo{
-    display: none;
+    position: relative;
+    right: 3em;
+    display: block;
     margin: auto;
     height: 100%;
-    width: 100%;
+    width: 33em;
+    border-radius: 50px;
+    z-index: 10;
+    object-fit: fill;
+    display: block;
 }
 
 #roundCounter{
