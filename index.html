@@ -9,16 +9,21 @@
 <body>
     <main>
         <div class="screenHold">
-            <button display: hidden id="start">Start Game!</button>
+            <button id="reset" class="displayHidden"><img src="Assets/restart.jpg" class="resetImg"></button>
             <div id="scoreHold">
-                <p class="tieScore">Tie Score: 0</p>
+                <p class="tieScore" id="tie">Tie Score: 0</p>
                 <div class="scoreUser">
-                <p class="userScore">Your Score: 0</p>
-                <p class="enemyScore">Computer Score: 0</p>
+                <p class="userScore" id="userPoint">Your Score: 0</p>
+                <p class="computerScore" id="computerPoint">Computer Score: 0</p>
                 </div>
             </div>
             <div id="powerUP">
-                <button id="power1"><img src="Assets/AI.svg" class="powerImg">TALK<span class="tooltip">Talk to the computer, empathize! 80% higher chance to win this round.</span></button>
+                    <img src="Assets/wrong.png" class="displayHidden" id="wrong1">
+                    <img src="Assets/wrong.png" class="displayHidden" id="wrong2">
+                    <img src="Assets/wrong.png" class="displayHidden" id="wrong3">
+                    <video src="Assets/explode.webm" id="explode" class="displayHidden"></video>
+
+                <button id="power1"><img src="Assets/AI.svg" class="powerImg">TALK<span class="tooltip">Talk to the computer, empathize! 75% higher chance to win this round if you pick paper to hug him.</span></button>
                 <button id="power2"><img src="Assets/bullet.svg" class="powerImg">TIE BULLET<span class="tooltip">Oh look, a "tie"! Steal a point from the computer when there is tie scores. Shhh.</span></button>
                 <button id="power3"><img src="Assets/yamchas.svg" class="powerImg">SELF-DESTRUCTION<span class="tooltip">If I can't win, you can't win also</span></button>
             </div>
@@ -27,12 +32,26 @@
                 <button id="scissor"><img class="game" src="Assets/scissor.svg"></button>
                 <button id="paper"><img class="game" src="Assets/paper.svg"></button>
                 <div id="boxContain">
-                    <p class="annouced">WINNER!</p>
-                    <div id="userBox"><video src="Assets/Power1.webm" width="500" class="memeVideo"></video></div>
+                    
+                    <video src = "Assets/memeTie.webm" class= "displayHidden" id="bigVideo"></video>
+                    <video src = "Assets/memeTie.webm" class= "displayHidden" id="powerUpVid"></video>
+                    <div id="userBox">
+                        <p class="annouced" id="userAnnounced">WINNER!</p>
+                        <div class="visualHandler">
+                            <video src="Assets/winMeme2.webm" id="meme" class="displayHidden"></video>
+                            <img id= "imgHandle" class="displayHidden" src="Assets/rock.svg">
+                        </div>
+                        
+                    </div>
                     <p id="versus">VS</p>
-                    <p class="annouced">Loser :(</p>
-                    <div id="enemyBox"></div>
-                    <p id="roundCounter">ROUND 1</p>
+                    
+                    <div id="enemyBox">
+                        <p class="annouced" id="computerAnnounced">Loser :(</p>
+                        <div class="visualHandler">
+                            <img id= "computerImg" class="displayHidden" src="Assets/rock.svg">
+                        </div>
+                    </div>
+                    <p id="roundCounter"></p>
                 </div>
                 <button id="enemyRock" disabled><img class="gameEnemy" src="Assets/rock.svg"></button>
                 <button id="enemyScissor" disabled><img class="gameEnemy" src="Assets/scissor.svg"></button>
@@ -41,5 +60,6 @@
         </div>
     </main>
 </body>
-<script src="main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
+<script src="main.js" defer></script>
 </html>
