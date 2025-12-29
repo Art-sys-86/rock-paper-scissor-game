@@ -146,7 +146,7 @@ restart(){
     imgHandler.classList.add('displayHidden');
     computerImg.classList.add('displayHidden');
     announcer.forEach(element => {
-            element.style.display = "none";
+        element.style.display = "none";
     });
     tiePoint.textContent = `Tie Score: 0`;
     userPoint.textContent = `Your Score: 0`;
