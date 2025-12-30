@@ -7,6 +7,7 @@ class game{
         this.tieScore = 0;
         this.round = 0;
         this.usedPowerUp = false;
+        this.powerUpNo = 0;
         this.choice = ["rock", "paper","scissor"];
         this.winVideo = [
             'assets/winMeme1.webm',
@@ -32,6 +33,20 @@ class game{
     
     }
 
+    restart(){
+        this.displayHide();
+        this.choice = choice = ["rock", "paper", "scissor"];
+        this.userChoice = '';
+        this.computerChoice = '';
+        this.userScore = 0;
+        this.computerScore = 0;
+        this.tieScore = 0;
+        this.round = 0;
+        this.usedPowerUp = false;
+        this.powerUpNo = 0;
+        this.enableChoice();
+        this.enablePower();
+    }
     displayHide(){
         document.getElementById('userImg').classList.remove('choice');
         document.getElementById('userImg').classList.add('displayHidden');
@@ -39,6 +54,15 @@ class game{
         document.getElementById('computerImg').classList.add('displayHidden');
         announcer.forEach(element => {element.style.display = "none"});
         wrongImg.forEach(element => {element.classList.add('displayHidden')});
+    }
+
+    displayShow(){
+        document.getElementById('userImg').classList.remove('displayHidden');
+        document.getElementById('userImg').classList.add('choice');
+        document.getElementById('computerImg').classList.remove('displayHidden');
+        document.getElementById('computerImg').classList.add('computerChoice');
+        announcer.forEach(element => {element.style.display = "block"});
+        wrongImg.forEach(element => {element.classList.add('wrong1')});
     }
 
     playVideo(videoRef, videoclass, videoSrc){
@@ -118,9 +142,51 @@ class game{
             this.confetti();
             resetButton.classList.remove('displayHidden');
             resetButton.classList.add('reset');
+            return;
+        }
+        else{
+            this.result();
         }
     }
 
+    videoEnd(vidSrc){
+        this.disableChoice();
+        this.disablePower();
+        this.displayHide();
+        if(this.powerUpNo = 3){
+            vidSrc.addEventListener('ended', () =>{
+        resetButton.classList.remove('displayHidden');
+        resetButton.classList.add('reset');
+        return;
+        })
+        }
+        else if(this.usedPowerUp){
+            vidSrc.addEventListener('ended', () =>{
+        powerUpVid.classList.add('powerUpVideo');
+        powerUpVid.classList.remove('displayHidden');
+        this.displayHide();
+    })
+        }
+        else if(this.computerScore >= 3){
+            this.playVideo('memeVid', 'memeVid', this.loseVideo[2]).addEventListener('ended', ()=>{
+                this.endGame();
+            });
+            this.endGame();
+            
+        }
+        else if(this.userScore >= 3){
+            this.playVideo('memeVid', 'memeVid', this.winVideo[2]).addEventListener('ended', ()=>{
+                this.endGame();
+            });
+            
+        }
+        else{
+            this.displayShow();
+            this.enablePower();
+        }
+        this.enableChoice();
+    }
+    
     disableChoice(){
         rock.disabled = true;
         paper.disabled = true;
