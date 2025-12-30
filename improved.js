@@ -144,16 +144,13 @@ class game{
             resetButton.classList.add('reset');
             return;
         }
-        else{
-            this.result();
-        }
     }
 
     videoEnd(vidSrc){
         this.disableChoice();
         this.disablePower();
         this.displayHide();
-        if(this.powerUpNo = 3){
+        if(this.powerUpNo === 3){
             vidSrc.addEventListener('ended', () =>{
         resetButton.classList.remove('displayHidden');
         resetButton.classList.add('reset');
