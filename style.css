@@ -128,7 +128,7 @@ img {
     opacity: 1;
 }
 
-.wrong1{
+.wrong{
     width: 75%;
     height: 15%;
     position: absolute;
@@ -138,26 +138,12 @@ img {
     cursor: not-allowed;
 }
 
-.wrong2{
-    width: 75%;
-    height: 15%;
-    position: absolute;
+#wrong2{
     top: 12.5em;
-    left: 1.2em;
-    z-index: 5;
-    opacity: 90%;
-    cursor: not-allowed;
 }
 
-.wrong3{
-    width: 75%;
-    height: 15%;
-    position: absolute;
-    left: 1.2em;
+#wrong3{
     top: 24.5em;
-    z-index: 5;
-    opacity: 90%;
-    cursor: not-allowed;
 }
 
 .bomb{

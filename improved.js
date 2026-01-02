@@ -9,6 +9,7 @@ class game{
         this.usedPowerUp = false;
         this.powerUpNo = 0;
         this.choice = ["rock", "paper","scissor"];
+        this.wrongImg = document.querySelectorAll('.wrong');
         this.winVideo = [
             'assets/winMeme1.webm',
             'assets/winMeme2.webm',
@@ -35,7 +36,7 @@ class game{
 
     restart(){
         this.displayHide();
-        this.choice = choice = ["rock", "paper", "scissor"];
+        this.choice = ["rock", "paper", "scissor"];
         this.userChoice = '';
         this.computerChoice = '';
         this.userScore = 0;
@@ -44,6 +45,7 @@ class game{
         this.round = 0;
         this.usedPowerUp = false;
         this.powerUpNo = 0;
+        this.wrongImg.forEach(element => {element.classList.add('displayHidden')});
         this.enableChoice();
         this.enablePower();
     }
@@ -53,16 +55,18 @@ class game{
         document.getElementById('computerImg').classList.remove('computerChoice');
         document.getElementById('computerImg').classList.add('displayHidden');
         announcer.forEach(element => {element.style.display = "none"});
-        wrongImg.forEach(element => {element.classList.add('displayHidden')});
     }
 
     displayShow(){
-        document.getElementById('userImg').classList.remove('displayHidden');
-        document.getElementById('userImg').classList.add('choice');
-        document.getElementById('computerImg').classList.remove('displayHidden');
-        document.getElementById('computerImg').classList.add('computerChoice');
+        const userImg = document.getElementById('userImg');
+        userImg.classList.add('choice');
+        userImg.classList.remove('displayHidden');
+        userImg.src = `Assets/${this.userChoice}.svg`; 
+        const computerImg = document.getElementById('computerImg');
+        computerImg.classList.remove('displayHidden');
+        computerImg.classList.add('computerChoice')
+        computerImg.src = `Assets/${this.computerChoice}.svg`;
         announcer.forEach(element => {element.style.display = "block"});
-        wrongImg.forEach(element => {element.classList.add('wrong1')});
     }
 
     playVideo(videoRef, videoclass, videoSrc){
@@ -74,23 +78,36 @@ class game{
         videoRef.src = videoSrc;
         videoRef.muted = false;
         videoRef.play();
+
+        videoRef.onended = () => {
+        videoRef.classList.add('displayHidden');
+        videoRef.classList.remove(videoclass);
+        if (this.userScore >= 3 || this.computerScore >= 3) {
+            this.endGame();
+        } else {
+            this.displayShow();
+            this.enableChoice();
+            this.enablePower();
+        }
+    }
     }
 
     updateScoreDisplay(){
         document.getElementById('tie').textContent = `Tie Score: ${this.tieScore}`;
-        document.getElementById('userPoint').textContent = `Your Score: ${this.userPoint}`;
+        document.getElementById('userPoint').textContent = `Your Score: ${this.userScore}`;
         document.getElementById('computerPoint').textContent = `Computer Score: ${this.computerScore}`;
         document.getElementById('roundCounter').textContent = `Round ${this.round}`;
     }
 
     resultUpdate(userResult, loserResult){
-        userText.textContent = userResult;
-        computerText.textContent = loserResult;
+        document.getElementById('userAnnounced').textContent = userResult;
+        document.getElementById('computerAnnounced').textContent = loserResult;
     }
     
     result(){
         this.disableChoice();
         this.disablePower();
+        this.checkPower();
         this.round++;
         this.computerChoice = this.choice[Math.floor(Math.random() * this.choice.length)]
         if(this.userChoice === this.computerChoice){
@@ -106,7 +123,7 @@ class game{
                 setTimeout(() => {
                     this.resultUpdate("Tie", "Tie");
                     this.displayHide();
-                    this.playVideo('bigVideo', 'bigVideo', this.easterEggVid[0]);
+                    this.playVideo(bigVideo, 'bigVideo', this.easterEggVid[0]);
                 }, 2000)
             }
         }
@@ -119,7 +136,7 @@ class game{
             setTimeout(() => {
                     this.resultUpdate("WinneR", "LoseR");
                     this.displayHide();
-                    this.playVideo('memeVid', 'memeVid', this.winVideo[this.userScore]);
+                    this.playVideo(memeVid, 'memeVid', this.winVideo[this.userScore - 1]);
                 }, 2000);
         }
         else{
@@ -127,61 +144,77 @@ class game{
             setTimeout(() => {
                     this.resultUpdate("LoseR", "WinneR");
                     this.displayHide();
-                    this.playVideo('memeVid', 'memeVid', this.winVideo[this.userScore]);
+                    this.playVideo(memeVid, 'memeVid', this.loseVideo[this.computerScore - 1]);
                 }, 2000);
         }
         this.updateScoreDisplay();
+        this.easterEgg();
         this.endGame();
     }
+    
+    checkPower(){
+    this.disableChoice();
+    this.disablePower();
+    this.wrongImg.forEach(element => {element.classList.add('wrong')});
+    const powerUpVideo = document.getElementById('powerUpVid');
+    if(this.usedPowerUp && this.powerUpNo === 2) {
+        this.updateScoreDisplay();
+        this.usedPowerUp = false; 
+        this.powerUpNo = 0; 
+        return;
+    }
 
+    if(this.powerUpNo === 1){
+        this.choice = ["rock", "rock", "rock", "scissor"];
+        this.playVideo(powerUpVideo, 'powerUpVideo', this.powerUpVid[0])
+    }
+    else if(this.powerUpNo === 2){
+        if(this.tieScore >= 1 && this.computerScore >= 1){
+            this.userScore++;
+            this.computerScore--;
+            this.tieScore--;
+            this.playVideo(powerUpVideo, 'powerUpVideo', this.powerUpVid[1])
+        }
+        else{
+            this.usedPowerUp = false;
+            this.wrongImg.forEach(element => {element.classList.add('displayHidden')});
+        }
+    }
+    else if(this.powerUpNo === 3){
+        this.playVideo(powerUpVideo, 'powerUpVideo', this.powerUpVid[2])
+        document.getElementById('screenHold').style.display = "none";
+        resetButton.classList.remove('displayHidden');
+        resetButton.classList.add('reset');
+    }
+    else{
+        this.usedPowerUp = false;
+        this.wrongImg.forEach(element => {element.classList.add('displayHidden')});
+        this.enableChoice();
+        this.enablePower();
+    }
+}
+    
+    easterEgg(){
+        if(this.userScore === 3 && this.userChoice === "rock" && this.computerChoice === "scissor"){
+            this.playVideo(bigVideo, 'bigVideo', this.easterEggVid[1]);
+            this.endGame();
+        }
+        else if(this.computerScore === 3 && this.userChoice === "paper" && this.computerChoice === "scissor"){
+            this.playVideo(bigVideo, 'bigVideo', this.easterEggVid[2]);
+            this.endGame();
+        }
+    }
+    
     endGame(){
         if(this.userScore >= 3 || this.computerScore >= 3){
             this.disableChoice();
             this.displayHide();
             this.disablePower();
-            this.confetti();
+            this.confettiShow();
             resetButton.classList.remove('displayHidden');
             resetButton.classList.add('reset');
             return;
         }
-    }
-
-    videoEnd(vidSrc){
-        this.disableChoice();
-        this.disablePower();
-        this.displayHide();
-        if(this.powerUpNo === 3){
-            vidSrc.addEventListener('ended', () =>{
-        resetButton.classList.remove('displayHidden');
-        resetButton.classList.add('reset');
-        return;
-        })
-        }
-        else if(this.usedPowerUp){
-            vidSrc.addEventListener('ended', () =>{
-        powerUpVid.classList.add('powerUpVideo');
-        powerUpVid.classList.remove('displayHidden');
-        this.displayHide();
-    })
-        }
-        else if(this.computerScore >= 3){
-            this.playVideo('memeVid', 'memeVid', this.loseVideo[2]).addEventListener('ended', ()=>{
-                this.endGame();
-            });
-            this.endGame();
-            
-        }
-        else if(this.userScore >= 3){
-            this.playVideo('memeVid', 'memeVid', this.winVideo[2]).addEventListener('ended', ()=>{
-                this.endGame();
-            });
-            
-        }
-        else{
-            this.displayShow();
-            this.enablePower();
-        }
-        this.enableChoice();
     }
     
     disableChoice(){
@@ -207,4 +240,80 @@ class game{
         power2.disabled = false;
         power3.disabled = false;
     }
+
+confettiShow() {
+const duration = 2 * 100;
+const animationEnd = Date.now() + duration;
+const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+function randomInRange(min, max) {
+    return Math.random() * (max - min) + min;
 }
+
+this.confettiInterval = setInterval(() => {
+    const timeLeft = animationEnd - Date.now();
+
+    if (timeLeft <= 0) {
+    clearInterval(this.confettiInterval);
+    }
+
+const particleCount = 50 * (timeLeft / duration);
+
+confetti(Object.assign({}, defaults, {
+    particleCount,
+    origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+    }));
+    confetti(Object.assign({}, defaults, {
+    particleCount,
+    origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+    }));
+}, 50);
+}
+
+}
+
+const videogame = new game();
+
+rock.addEventListener('click', ()=> {
+    videogame.userChoice = "rock";
+    videogame.result();
+    videogame.displayShow();
+})
+
+paper.addEventListener('click', ()=> {
+    videogame.userChoice = "paper";
+    videogame.result();
+    videogame.displayShow();
+})
+scissor.addEventListener('click', ()=> {
+    videogame.userChoice = "scissor";
+    videogame.result();
+    videogame.displayShow();
+})
+
+resetButton.addEventListener('click', () => {
+    resetButton.classList.add('displayHidden');
+    videogame.restart();
+})
+
+power1.addEventListener('click', ()=> {
+    videogame.powerUpNo = 1;
+    videogame.checkPower();
+})
+
+power2.addEventListener('click', ()=> {
+    if(videogame.tieScore <= 0 || videogame.computerScore <= 0){
+        return;
+    }
+    else{
+    videogame.powerUpNo = 2;
+    videogame.checkPower();
+    }
+    
+})
+
+power3.addEventListener('click', ()=> {
+    videogame.disableChoice();
+    videogame.disablePower();
+    videogame.playVideo(explode, 'explode', videogame.powerUpVid[3]);
+})
