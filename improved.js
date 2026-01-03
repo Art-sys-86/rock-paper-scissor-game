@@ -1,3 +1,9 @@
+const resetButton = document.getElementById('reset');
+const announcer = document.querySelectorAll('.annouced');
+const bigVideo = document.getElementById('bigVideo');
+const memeVid = document.getElementById('meme');
+const powerUpVid = document.getElementById('powerUpVid');
+
 class game{
     constructor(){
         this.userChoice = "";
@@ -8,8 +14,11 @@ class game{
         this.round = 0;
         this.usedPowerUp = false;
         this.powerUpNo = 0;
-        this.choice = ["rock", "paper","scissor"];
+        this.choice = ["rock", "paper", "scissor"];
         this.wrongImg = document.querySelectorAll('.wrong');
+        this.wrongImg.forEach(element => {
+            element.classList.add('displayHidden')
+        }); //Hides the wrong image on the powerups
         this.winVideo = [
             'assets/winMeme1.webm',
             'assets/winMeme2.webm',
@@ -49,6 +58,9 @@ class game{
         this.enableChoice();
         this.enablePower();
     }
+
+    //Hides the win lose texts and the choice image displayed. Used when the video is playing.
+
     displayHide(){
         document.getElementById('userImg').classList.remove('choice');
         document.getElementById('userImg').classList.add('displayHidden');
@@ -56,6 +68,8 @@ class game{
         document.getElementById('computerImg').classList.add('displayHidden');
         announcer.forEach(element => {element.style.display = "none"});
     }
+
+    //As name suggest, it displays the win Lose and the choice images. Used in after the video ends
 
     displayShow(){
         const userImg = document.getElementById('userImg');
@@ -69,6 +83,8 @@ class game{
         announcer.forEach(element => {element.style.display = "block"});
     }
 
+    //Below can be called to playVideo with the video reference, what class to add and where the source is
+
     playVideo(videoRef, videoclass, videoSrc){
         this.disableChoice();
         this.disablePower();
@@ -78,10 +94,9 @@ class game{
         videoRef.src = videoSrc;
         videoRef.muted = false;
         videoRef.play();
-
-        videoRef.onended = () => {
-        videoRef.classList.add('displayHidden');
-        videoRef.classList.remove(videoclass);
+        videoRef.addEventListener('ended', () =>{
+            videoRef.classList.add('displayHidden');
+            videoRef.classList.remove(videoclass);
         if (this.userScore >= 3 || this.computerScore >= 3) {
             this.endGame();
         } else {
@@ -89,8 +104,10 @@ class game{
             this.enableChoice();
             this.enablePower();
         }
+        });
     }
-    }
+    
+    //The code below update the score display by accessing the score defined at the top
 
     updateScoreDisplay(){
         document.getElementById('tie').textContent = `Tie Score: ${this.tieScore}`;
@@ -99,33 +116,28 @@ class game{
         document.getElementById('roundCounter').textContent = `Round ${this.round}`;
     }
 
+    //Below code is used to annouce the winner and loser text
+
     resultUpdate(userResult, loserResult){
         document.getElementById('userAnnounced').textContent = userResult;
         document.getElementById('computerAnnounced').textContent = loserResult;
     }
-    
+
+    //The code below, calculate the result and then play videos accordingly!
+
     result(){
+        //Disabling and updating datas before calculations
         this.disableChoice();
         this.disablePower();
-        this.checkPower();
         this.round++;
         this.computerChoice = this.choice[Math.floor(Math.random() * this.choice.length)]
+        let outcome = "";
+
+        //Below calculate the result and send it to the constructor
+
         if(this.userChoice === this.computerChoice){
             this.tieScore++;
-            if(this.tieScore <= 1){
-            setTimeout(() => {
-                this.resultUpdate("Tie", "Tie");
-                this.enableChoice();
-                this.enablePower();
-            }, 500)
-            }
-            else if(this.tieScore >= 2){
-                setTimeout(() => {
-                    this.resultUpdate("Tie", "Tie");
-                    this.displayHide();
-                    this.playVideo(bigVideo, 'bigVideo', this.easterEggVid[0]);
-                }, 2000)
-            }
+            outcome = "Tie";
         }
         else if (
         (this.userChoice === "rock" && this.computerChoice === "scissor") ||
@@ -133,29 +145,64 @@ class game{
         (this.userChoice === "scissor" && this.computerChoice === "paper")
         ) {
             this.userScore++;
-            setTimeout(() => {
-                    this.resultUpdate("WinneR", "LoseR");
-                    this.displayHide();
-                    this.playVideo(memeVid, 'memeVid', this.winVideo[this.userScore - 1]);
-                }, 2000);
+            outcome = "Win";
         }
         else{
             this.computerScore++;
-            setTimeout(() => {
-                    this.resultUpdate("LoseR", "WinneR");
-                    this.displayHide();
-                    this.playVideo(memeVid, 'memeVid', this.loseVideo[this.computerScore - 1]);
-                }, 2000);
+            outcome = "Lose";
         }
+
+        //This is where Video Playing logics goes based on result
+
+        if(this.easterEgg()){
+            return;
+        }
+        else if(outcome === "Tie"){
+            if(this.tieScore >= 2){
+        this.resultUpdate("Tie", "Tie");
+            setTimeout(() => {
+        this.playVideo(bigVideo, 'bigVideo', this.easterEggVid[0]);
+        }, 2000);
+            }
+            else{
+                this.resultUpdate("Tie", "Tie");
+                this.displayShow();
+                this.enableChoice();
+            }
+        }
+        else if(outcome === "Win"){
+        this.resultUpdate("Winner", "Loser");
+            setTimeout(() => {
+        this.playVideo(memeVid, 'memeVideo', this.winVideo[this.userScore - 1]);
+            }, 2000)
+        }
+        else{
+        this.resultUpdate("Loser", "Winner");
+            setTimeout(() => {
+        this.playVideo(memeVid, 'memeVideo', this.loseVideo[this.computerScore - 1]);
+            }, 2000)
+        }
+
         this.updateScoreDisplay();
-        this.easterEgg();
         this.endGame();
+        this.choice = ["rock", "paper", "scissor"];
     }
-    
+
+    showAllWrongs() {
+    this.usedPowerUp = true;
+    this.wrongImg.forEach(img => {
+        img.classList.remove('displayHidden');
+        img.classList.add('wrong');
+    });
+    this.disablePower();
+    }
+
     checkPower(){
+    if(this.usedPowerUp){
+        return;
+    }
     this.disableChoice();
     this.disablePower();
-    this.wrongImg.forEach(element => {element.classList.add('wrong')});
     const powerUpVideo = document.getElementById('powerUpVid');
     if(this.usedPowerUp && this.powerUpNo === 2) {
         this.updateScoreDisplay();
@@ -165,26 +212,31 @@ class game{
     }
 
     if(this.powerUpNo === 1){
+        this.showAllWrongs();
         this.choice = ["rock", "rock", "rock", "scissor"];
-        this.playVideo(powerUpVideo, 'powerUpVideo', this.powerUpVid[0])
+        this.playVideo(powerUpVid, 'powerUpVideo', this.powerUpVid[0]);
+        this.usedPowerUp = true;
     }
     else if(this.powerUpNo === 2){
+
         if(this.tieScore >= 1 && this.computerScore >= 1){
+            this.showAllWrongs();
             this.userScore++;
             this.computerScore--;
             this.tieScore--;
-            this.playVideo(powerUpVideo, 'powerUpVideo', this.powerUpVid[1])
+            this.updateScoreDisplay();
+            this.playVideo(powerUpVid, 'powerUpVideo', this.powerUpVid[1]);
         }
         else{
-            this.usedPowerUp = false;
-            this.wrongImg.forEach(element => {element.classList.add('displayHidden')});
+            this.enableChoice();
+            this.enablePower();
         }
     }
     else if(this.powerUpNo === 3){
-        this.playVideo(powerUpVideo, 'powerUpVideo', this.powerUpVid[2])
+        this.showAllWrongs();
+        this.playVideo(powerUpVid, 'powerUpVideo', this.powerUpVid[2])
         document.getElementById('screenHold').style.display = "none";
-        resetButton.classList.remove('displayHidden');
-        resetButton.classList.add('reset');
+        
     }
     else{
         this.usedPowerUp = false;
@@ -195,13 +247,17 @@ class game{
 }
     
     easterEgg(){
+        this.updateScoreDisplay();
         if(this.userScore === 3 && this.userChoice === "rock" && this.computerChoice === "scissor"){
-            this.playVideo(bigVideo, 'bigVideo', this.easterEggVid[1]);
-            this.endGame();
+            this.playVideo(bigVideo, 'memeVideo', this.easterEggVid[1]);
+            return true;
         }
         else if(this.computerScore === 3 && this.userChoice === "paper" && this.computerChoice === "scissor"){
-            this.playVideo(bigVideo, 'bigVideo', this.easterEggVid[2]);
-            this.endGame();
+            this.playVideo(bigVideo, 'memeVideo', this.easterEggVid[2]);
+            return true;
+        }
+        else{
+            return false;
         }
     }
     
@@ -211,8 +267,10 @@ class game{
             this.displayHide();
             this.disablePower();
             this.confettiShow();
-            resetButton.classList.remove('displayHidden');
-            resetButton.classList.add('reset');
+            this.playVideo.onended = () => {
+                resetButton.classList.remove('displayHidden');
+                resetButton.classList.add('reset');
+            }
             return;
         }
     }
@@ -315,5 +373,5 @@ power2.addEventListener('click', ()=> {
 power3.addEventListener('click', ()=> {
     videogame.disableChoice();
     videogame.disablePower();
-    videogame.playVideo(explode, 'explode', videogame.powerUpVid[3]);
+    videogame.playVideo(explode, 'bomb', videogame.powerUpVid[3]);
 })

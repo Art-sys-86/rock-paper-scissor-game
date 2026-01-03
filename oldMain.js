@@ -28,8 +28,8 @@ class game{
 constructor(userChoice, computerChoice){
     this.userChoice = userChoice;
     this.computerChoice = computerChoice;
-    this.userScore = 0;
-    this.computerScore = 0;
+    this.userScore = 2;
+    this.computerScore = 2;
     this.tieScore = 0;
     this.round = 0;
     this.powerUpNo = 0;
