@@ -3,6 +3,13 @@ const announcer = document.querySelectorAll('.annouced');
 const bigVideo = document.getElementById('bigVideo');
 const memeVid = document.getElementById('meme');
 const powerUpVid = document.getElementById('powerUpVid');
+const power1 = document.getElementById('power1');
+const power2 = document.getElementById('power2');
+const power3 = document.getElementById('power3');
+const explode = document.getElementById('explode');
+const rock = document.getElementById('rock');
+const paper = document.getElementById('paper');
+const scissor = document.getElementById('scissor');
 
 class game{
     constructor(){
@@ -57,6 +64,7 @@ class game{
         this.wrongImg.forEach(element => {element.classList.add('displayHidden')});
         this.enableChoice();
         this.enablePower();
+        this.updateScoreDisplay();
     }
 
     //Hides the win lose texts and the choice image displayed. Used when the video is playing.
@@ -75,11 +83,11 @@ class game{
         const userImg = document.getElementById('userImg');
         userImg.classList.add('choice');
         userImg.classList.remove('displayHidden');
-        userImg.src = `Assets/${this.userChoice}.svg`; 
+        userImg.src = `assets/${this.userChoice}.svg`; 
         const computerImg = document.getElementById('computerImg');
         computerImg.classList.remove('displayHidden');
         computerImg.classList.add('computerChoice')
-        computerImg.src = `Assets/${this.computerChoice}.svg`;
+        computerImg.src = `assets/${this.computerChoice}.svg`;
         announcer.forEach(element => {element.style.display = "block"});
     }
 
@@ -97,14 +105,21 @@ class game{
         videoRef.addEventListener('ended', () =>{
             videoRef.classList.add('displayHidden');
             videoRef.classList.remove(videoclass);
-        if (this.userScore >= 3 || this.computerScore >= 3) {
+        if (this.endGame()) {
+            resetButton.classList.add('reset');
+            resetButton.classList.remove('displayHidden')
+        } 
+        else if(videoSrc === this.powerUpVid[3]){
+            resetButton.classList.add('reset');
+            resetButton.classList.remove('displayHidden');
             this.endGame();
-        } else {
+        }
+        else {
             this.displayShow();
             this.enableChoice();
             this.enablePower();
         }
-        });
+        }, { once: true });
     }
     
     //The code below update the score display by accessing the score defined at the top
@@ -135,29 +150,18 @@ class game{
 
         //Below calculate the result and send it to the constructor
 
-        if(this.userChoice === this.computerChoice){
-            this.tieScore++;
-            outcome = "Tie";
-        }
-        else if (
+        this.userChoice === this.computerChoice ? (this.tieScore++, outcome = "Tie"): 
+
         (this.userChoice === "rock" && this.computerChoice === "scissor") ||
         (this.userChoice === "paper" && this.computerChoice === "rock") ||
-        (this.userChoice === "scissor" && this.computerChoice === "paper")
-        ) {
-            this.userScore++;
-            outcome = "Win";
-        }
-        else{
-            this.computerScore++;
-            outcome = "Lose";
-        }
+        (this.userChoice === "scissor" && this.computerChoice === "paper") ? 
+        (this.userScore++, outcome = "Win"): (this.computerScore++, outcome = "Lose");
 
         //This is where Video Playing logics goes based on result
 
-        if(this.easterEgg()){
-            return;
-        }
-        else if(outcome === "Tie"){
+        if(this.easterEgg()) return; //Checks if there is easteregg tiggered or not
+        
+        if(outcome === "Tie"){
             if(this.tieScore >= 2){
         this.resultUpdate("Tie", "Tie");
             setTimeout(() => {
@@ -182,13 +186,13 @@ class game{
         this.playVideo(memeVid, 'memeVideo', this.loseVideo[this.computerScore - 1]);
             }, 2000)
         }
-
+        //At the end updates the scores, checks if it reached end game and reset the choice to normal if player used powerup.
         this.updateScoreDisplay();
         this.endGame();
         this.choice = ["rock", "paper", "scissor"];
     }
 
-    showAllWrongs() {
+    showAllWrongs() { //This code manages the wrong image placed on the powerups after they used.
     this.usedPowerUp = true;
     this.wrongImg.forEach(img => {
         img.classList.remove('displayHidden');
@@ -204,12 +208,6 @@ class game{
     this.disableChoice();
     this.disablePower();
     const powerUpVideo = document.getElementById('powerUpVid');
-    if(this.usedPowerUp && this.powerUpNo === 2) {
-        this.updateScoreDisplay();
-        this.usedPowerUp = false; 
-        this.powerUpNo = 0; 
-        return;
-    }
 
     if(this.powerUpNo === 1){
         this.showAllWrongs();
@@ -218,7 +216,6 @@ class game{
         this.usedPowerUp = true;
     }
     else if(this.powerUpNo === 2){
-
         if(this.tieScore >= 1 && this.computerScore >= 1){
             this.showAllWrongs();
             this.userScore++;
@@ -234,9 +231,8 @@ class game{
     }
     else if(this.powerUpNo === 3){
         this.showAllWrongs();
-        this.playVideo(powerUpVid, 'powerUpVideo', this.powerUpVid[2])
+        this.playVideo(powerUpVid, 'powerUpVideo', this.powerUpVid[2]);
         document.getElementById('screenHold').style.display = "none";
-        
     }
     else{
         this.usedPowerUp = false;
@@ -267,12 +263,9 @@ class game{
             this.displayHide();
             this.disablePower();
             this.confettiShow();
-            this.playVideo.onended = () => {
-                resetButton.classList.remove('displayHidden');
-                resetButton.classList.add('reset');
-            }
-            return;
+            return true;
         }
+        return false;
     }
     
     disableChoice(){
@@ -373,5 +366,11 @@ power2.addEventListener('click', ()=> {
 power3.addEventListener('click', ()=> {
     videogame.disableChoice();
     videogame.disablePower();
-    videogame.playVideo(explode, 'bomb', videogame.powerUpVid[3]);
+    setTimeout(() => {
+        videogame.playVideo(powerUpVid, "powerUpVideo", videogame.powerUpVid[2])
+    }, 50);
+    setTimeout(() =>{
+        videogame.playVideo(explode, 'bomb', videogame.powerUpVid[3]);
+    }, 6000)
+    
 })
