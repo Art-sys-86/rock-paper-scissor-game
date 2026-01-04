@@ -161,7 +161,7 @@ class game{
 
         if(this.easterEgg()) return; //Checks if there is easteregg tiggered or not
         
-        if(outcome === "Tie"){
+        if(outcome === "Tie"){  //If tie is more than 2 show easter egg meme else show nothing
             if(this.tieScore >= 2){
         this.resultUpdate("Tie", "Tie");
             setTimeout(() => {
@@ -174,7 +174,7 @@ class game{
                 this.enableChoice();
             }
         }
-        else if(outcome === "Win"){
+        else if(outcome === "Win"){ //play the video after 2 sec with playerscore/computerscore as an index for array.
         this.resultUpdate("Winner", "Loser");
             setTimeout(() => {
         this.playVideo(memeVid, 'memeVideo', this.winVideo[this.userScore - 1]);
@@ -201,21 +201,20 @@ class game{
     this.disablePower();
     }
 
-    checkPower(){
-    if(this.usedPowerUp){
-        return;
-    }
+    checkPower(){ //This block of code checks if user had used any power before the result start calculating.
+    if(this.usedPowerUp) return;
+
     this.disableChoice();
     this.disablePower();
     const powerUpVideo = document.getElementById('powerUpVid');
 
-    if(this.powerUpNo === 1){
+    if(this.powerUpNo === 1){ //Makes the computer choice 75% rock
         this.showAllWrongs();
         this.choice = ["rock", "rock", "rock", "scissor"];
         this.playVideo(powerUpVid, 'powerUpVideo', this.powerUpVid[0]);
         this.usedPowerUp = true;
     }
-    else if(this.powerUpNo === 2){
+    else if(this.powerUpNo === 2){ //Checks if there is tiescore and computerscore if not return else continue.
         if(this.tieScore >= 1 && this.computerScore >= 1){
             this.showAllWrongs();
             this.userScore++;
@@ -229,7 +228,7 @@ class game{
             this.enablePower();
         }
     }
-    else if(this.powerUpNo === 3){
+    else if(this.powerUpNo === 3){ //if user pressed it everything goes pitch black!
         this.showAllWrongs();
         this.playVideo(powerUpVid, 'powerUpVideo', this.powerUpVid[2]);
         document.getElementById('screenHold').style.display = "none";
@@ -242,9 +241,9 @@ class game{
     }
 }
     
-    easterEgg(){
-        this.updateScoreDisplay();
-        if(this.userScore === 3 && this.userChoice === "rock" && this.computerChoice === "scissor"){
+    easterEgg(){ //This block of code handles easteregg.
+        this.updateScoreDisplay(); //Updates the score display in easteregg tigger event also.
+        if(this.userScore === 3 && this.userChoice === "rock" && this.computerChoice === "scissor"){ 
             this.playVideo(bigVideo, 'memeVideo', this.easterEggVid[1]);
             return true;
         }
@@ -257,7 +256,7 @@ class game{
         }
     }
     
-    endGame(){
+    endGame(){ //Checks if the game is over.
         if(this.userScore >= 3 || this.computerScore >= 3){
             this.disableChoice();
             this.displayHide();
@@ -268,7 +267,7 @@ class game{
         return false;
     }
     
-    disableChoice(){
+    disableChoice(){ 
         rock.disabled = true;
         paper.disabled = true;
         scissor.disabled = true;
@@ -292,7 +291,7 @@ class game{
         power3.disabled = false;
     }
 
-confettiShow() {
+confettiShow() { //Copied from website
 const duration = 2 * 100;
 const animationEnd = Date.now() + duration;
 const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
@@ -366,7 +365,7 @@ power2.addEventListener('click', ()=> {
 power3.addEventListener('click', ()=> {
     videogame.disableChoice();
     videogame.disablePower();
-    setTimeout(() => {
+    setTimeout(() => { //There is two video in power3, one is meme and one is explosion so meme is 6 sec long after that explode video plays.
         videogame.playVideo(powerUpVid, "powerUpVideo", videogame.powerUpVid[2])
     }, 50);
     setTimeout(() =>{
